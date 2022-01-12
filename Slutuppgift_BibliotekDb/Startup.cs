@@ -56,6 +56,17 @@ namespace Slutuppgift_BibliotekDb
             {
                 endpoints.MapControllers();
             });
+
+            var serviceScopeFactory = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>();
+            using (var scope = serviceScopeFactory.CreateScope())
+            {
+                var context = scope.ServiceProvider.GetService<Context>();
+                context.Database.EnsureDeleted();
+                context.Database.EnsureCreated();
+                DataAccess dataAccess = new DataAccess();
+                dataAccess.SeedDatabase();
+
+            }
         }
     }
 }

@@ -1,18 +1,25 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Slutuppgift_BibliotekDb.Models
 {
     public class Book
     {
         public int Id { get; set; }
+        [Required]
         public int ISBN { get; set; }
+        [StringLength(100)]
+        [Required]
         public string BookTitle { get; set; }
-        public int AuthorId { get; set; }
-        public Author Author { get; set; }
+        [Required]
         public string PublishDate { get; set; }
+        [Required]
         public double Rating { get; set; }
-        public bool IsRented { get; set; }
-        public ICollection<RentHistory> RentHistory { get; set; }
+        public string Loaned { get; set; }
+
+        public ICollection<BookLoan> BookLoans { get; set; }
+        public ICollection<BookAuthor> BookAuthors { get; set; }
+
 
     }
 }

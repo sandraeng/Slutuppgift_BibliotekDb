@@ -2,15 +2,17 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Slutuppgift_BibliotekDb.Data;
 
 namespace Slutuppgift_BibliotekDb.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20220112174259_namechangeBookLoan")]
+    partial class namechangeBookLoan
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -55,8 +57,8 @@ namespace Slutuppgift_BibliotekDb.Migrations
                     b.Property<int>("ISBN")
                         .HasColumnType("int");
 
-                    b.Property<string>("Loaned")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<bool>("Loaned")
+                        .HasColumnType("bit");
 
                     b.Property<string>("PublishDate")
                         .IsRequired()
@@ -160,13 +162,13 @@ namespace Slutuppgift_BibliotekDb.Migrations
             modelBuilder.Entity("Slutuppgift_BibliotekDb.Models.BookLoan", b =>
                 {
                     b.HasOne("Slutuppgift_BibliotekDb.Models.Book", "Book")
-                        .WithMany("BookLoans")
+                        .WithMany("LoanHistory")
                         .HasForeignKey("BookId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Slutuppgift_BibliotekDb.Models.Customer", "Customer")
-                        .WithMany("BookLoans")
+                        .WithMany("LoanHistory")
                         .HasForeignKey("LibraryCardNr")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -185,12 +187,12 @@ namespace Slutuppgift_BibliotekDb.Migrations
                 {
                     b.Navigation("BookAuthors");
 
-                    b.Navigation("BookLoans");
+                    b.Navigation("LoanHistory");
                 });
 
             modelBuilder.Entity("Slutuppgift_BibliotekDb.Models.Customer", b =>
                 {
-                    b.Navigation("BookLoans");
+                    b.Navigation("LoanHistory");
                 });
 #pragma warning restore 612, 618
         }
