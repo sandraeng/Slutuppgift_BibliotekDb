@@ -88,12 +88,20 @@ namespace Slutuppgift_BibliotekDb.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCustomer(int id)
         {
-            var customer = await _context.Customers.FindAsync(id);
+            LoanHistory loanHistory = new LoanHistory();
+            var customer = await _context.Customers.Include(c => c.BookLoans).FirstOrDefaultAsync(c => c.LibraryCardNr == id);
             if (customer == null)
             {
                 return NotFound();
             }
-
+            if(customer.BookLoans.Any(c => c.ReturnDate == ""))
+            {
+                BookLoan bookLoan = _context.BookLoans.FirstOrDefault(c => c.LibraryCardNr == id && c.ReturnDate == "");
+                loanHistory.BookId = bookLoan.BookId;
+                loanHistory.LoanDate = bookLoan.LoanDate;
+                loanHistory.ReturnDate = "Book not returned!";
+                _context.LoanHistories.Add(loanHistory);
+            }
             _context.Customers.Remove(customer);
             await _context.SaveChangesAsync();
 

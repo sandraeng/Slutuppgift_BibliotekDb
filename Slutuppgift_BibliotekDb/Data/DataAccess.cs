@@ -1,4 +1,5 @@
 ﻿using Slutuppgift_BibliotekDb.Models;
+using System;
 
 namespace Slutuppgift_BibliotekDb.Data
 {
@@ -29,7 +30,7 @@ namespace Slutuppgift_BibliotekDb.Data
             book.BookTitle = "Into the blue";
             book.PublishDate = "12-12-2020";
             book.Rating = 3.2;
-            book.Loaned = "No";
+            book.Loaned = "Yes";
             context.Books.Add(book);
 
             Book book1 = new Book();
@@ -53,7 +54,7 @@ namespace Slutuppgift_BibliotekDb.Data
             book3.BookTitle = "To eat a spider";
             book3.PublishDate = "07-11-2007";
             book3.Rating = 2.5;
-            book3.Loaned = "No";
+            book3.Loaned = "Yes";
             context.Books.Add(book3);
 
             Customer customer = new Customer();
@@ -75,7 +76,7 @@ namespace Slutuppgift_BibliotekDb.Data
             customer3.FirstName = "Lisa";
             customer3.LastName = "Fritz";
             context.Customers.Add(customer3);
-
+           
             context.SaveChanges();
 
             BookAuthor bookAuthor = new BookAuthor();
@@ -103,10 +104,20 @@ namespace Slutuppgift_BibliotekDb.Data
             bookAuthor4.AuthorId = 3;
             context.BookAuthors.Add(bookAuthor4);
 
+            BookLoan bookLoan = new BookLoan();
+            bookLoan.BookId = 4;
+            bookLoan.LibraryCardNr = 1001;
+            bookLoan.LoanDate = DateTime.Now.ToString(@"MM\-dd\-yyyy HH\:mm");
+            bookLoan.ReturnDate = "";
+            context.BookLoans.Add(bookLoan);
+
+            BookLoan bookLoan1 = new BookLoan();
+            bookLoan1.BookId = 1;
+            bookLoan1.LibraryCardNr = 1003;
+            bookLoan1.LoanDate = DateTime.Now.ToString(@"MM\-dd\-yyyy HH\:mm");
+            bookLoan1.ReturnDate = "";
+            context.BookLoans.Add(bookLoan1);
             context.SaveChanges();
-            //LoanHistory loanHistory = new LoanHistory();
-            //loanHistory.BookId = 1;
-            //loanHistory.LibraryCardNr = 1001;
         }
     }
 }

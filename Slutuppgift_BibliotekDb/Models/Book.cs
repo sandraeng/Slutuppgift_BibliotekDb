@@ -19,6 +19,7 @@ namespace Slutuppgift_BibliotekDb.Models
 
         public ICollection<BookLoan> BookLoans { get; set; }
         public ICollection<BookAuthor> BookAuthors { get; set; }
+        public ICollection<LoanHistory> LoanHistories { get; set; }
 
 
     }

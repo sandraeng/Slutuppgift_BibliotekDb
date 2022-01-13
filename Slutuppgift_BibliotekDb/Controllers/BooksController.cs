@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -36,7 +37,7 @@ namespace Slutuppgift_BibliotekDb.Controllers
 
             if (book == null)
             {
-                return NotFound();
+                return NotFound($"No book with id: {id} found");
             }
 
             return book;
@@ -49,9 +50,25 @@ namespace Slutuppgift_BibliotekDb.Controllers
         {
             if (id != book.Id)
             {
-                return BadRequest();
+                return BadRequest($"No book with id: {id} found");
             }
-
+            var testString = book.Loaned.ToUpper();
+            if (book.ISBN < 1000000 || book.ISBN > 9999999)
+            {
+                return BadRequest("The books ISBN must contain 7 numbers and cant start with 0");
+            }
+            if (testString == null)
+            {
+                return BadRequest("Loaned cant be empty");
+            }
+            if (testString != "YES" && testString != "NO")
+            {
+                return BadRequest("Loaned must contain 'yes' or 'no'");
+            }
+            if (!DateTime.TryParseExact(book.PublishDate, "dd-MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, out DateTime datetime))
+            {
+                return BadRequest("PublishDate must be in format dd-MM-yyyy");
+            }
             _context.Update(book);
 
             try
@@ -78,8 +95,34 @@ namespace Slutuppgift_BibliotekDb.Controllers
         [HttpPost]
         public async Task<ActionResult<Book>> PostBook(Book book)
         {
-            _context.Books.Add(book);
-            await _context.SaveChangesAsync();
+            try
+            {
+                var testString = book.Loaned.ToUpper();
+                if (book.ISBN < 1000000 || book.ISBN > 9999999)
+                {
+                    return BadRequest("The books ISBN must contain 7 numbers and cant start with 0");
+                }
+                if(testString == null)
+                {
+                    return BadRequest("Loaned cant be empty");
+                }
+                if(testString != "YES" && testString != "NO")
+                {
+                    return BadRequest("Loaned must contain 'yes' or 'no'");
+                }
+                if(!DateTime.TryParseExact(book.PublishDate, "dd-MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, out DateTime datetime))
+                {
+                    return BadRequest("PublishDate must be in format dd-MM-yyyy");
+                }
+                _context.Books.Add(book);
+                await _context.SaveChangesAsync();
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
 
             return CreatedAtAction("GetBook", new { id = book.Id }, book);
         }

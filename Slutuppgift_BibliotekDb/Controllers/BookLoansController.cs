@@ -48,23 +48,28 @@ namespace Slutuppgift_BibliotekDb.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutBookLoan(int id, BookLoan bookLoan)
         {
-
+            LoanHistory loanHistory = new LoanHistory();
             try
             {
-                bookLoan.Id = id;
+                
+                var testString = bookLoan.IsLoanActive.ToUpper();
                 if (id != bookLoan.Id)
                 {
-                    return BadRequest($"No bookloan with id: {id} exists");
+                    return BadRequest($"The id input is incorrect, bookloan id: {bookLoan.Id}, request id: {id}");
                 }
-                if (bookLoan.IsLoanActive.ToUpper() == "No".ToUpper())
+                if (testString == "NO")
                 {
                     Book book = await _context.Books.FirstOrDefaultAsync(x => x.Id == bookLoan.BookId);
                     bookLoan.Book = book;
                     bookLoan.Book.Loaned = "no";
                     bookLoan.ReturnDate = DateTime.Now.ToString(@"MM\-dd\-yyyy HH\:mm");
                     _context.Update(bookLoan);
+                    loanHistory.Book = book;
+                    loanHistory.LoanDate = bookLoan.LoanDate;
+                    loanHistory.ReturnDate = bookLoan.ReturnDate;
+                    _context.LoanHistories.Add(loanHistory);
                 }
-                else if(bookLoan.IsLoanActive.ToUpper() != "Yes".ToUpper() || bookLoan.IsLoanActive.ToUpper() != "No".ToUpper())
+                if(testString != "YES" && testString != "NO")
                 {
                     return BadRequest("IsLoanActive must contain 'Yes' or 'No'.");
                 }
@@ -100,20 +105,8 @@ namespace Slutuppgift_BibliotekDb.Controllers
             {
                 bookLoan.Book.Loaned = "yes";
             }
-            if (bookLoan.IsLoanActive.ToUpper() == "Yes".ToUpper())
-            {
-                bookLoan.LoanDate = DateTime.Now.ToString(@"MM\-dd\-yyyy HH\:mm");
-                bookLoan.ReturnDate = "";
-            }
-            else if (bookLoan.IsLoanActive.ToUpper() == "No".ToUpper())
-            {
-                bookLoan.ReturnDate = DateTime.Now.ToString(@"MM\/dd\/yyyy HH\:mm");
-            }
-            else
-            {
-                return BadRequest("IsLoanActive must contain 'Yes' or 'No'.");
-
-            }
+            bookLoan.LoanDate = DateTime.Now.ToString(@"MM\-dd\-yyyy HH\:mm");
+            bookLoan.ReturnDate = "";
             _context.BookLoans.Add(bookLoan);
             try
             {

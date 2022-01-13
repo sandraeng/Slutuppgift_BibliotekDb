@@ -2,15 +2,17 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Slutuppgift_BibliotekDb.Data;
 
 namespace Slutuppgift_BibliotekDb.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20220113130013_loanhistory")]
+    partial class loanhistory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -143,12 +145,12 @@ namespace Slutuppgift_BibliotekDb.Migrations
 
             modelBuilder.Entity("Slutuppgift_BibliotekDb.Models.LoanHistory", b =>
                 {
-                    b.Property<int>("LoanId")
+                    b.Property<int>("BookId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("BookId")
+                    b.Property<int>("BookId1")
                         .HasColumnType("int");
 
                     b.Property<string>("LoanDate")
@@ -157,9 +159,9 @@ namespace Slutuppgift_BibliotekDb.Migrations
                     b.Property<string>("ReturnDate")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("LoanId");
+                    b.HasKey("BookId");
 
-                    b.HasIndex("BookId");
+                    b.HasIndex("BookId1");
 
                     b.ToTable("LoanHistories");
                 });
@@ -206,7 +208,7 @@ namespace Slutuppgift_BibliotekDb.Migrations
                 {
                     b.HasOne("Slutuppgift_BibliotekDb.Models.Book", "Book")
                         .WithMany("LoanHistories")
-                        .HasForeignKey("BookId")
+                        .HasForeignKey("BookId1")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
