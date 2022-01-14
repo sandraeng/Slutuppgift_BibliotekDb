@@ -49,7 +49,7 @@ namespace Slutuppgift_BibliotekDb.Migrations
 
                     b.HasIndex("LibraryCardNr");
 
-                    b.ToTable("BookLoans");
+                    b.ToTable("AktiveBookLoans");
                 });
 
             modelBuilder.Entity("Slutuppgift_BibliotekDb.Models.Author", b =>

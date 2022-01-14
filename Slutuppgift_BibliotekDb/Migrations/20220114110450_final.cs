@@ -2,7 +2,7 @@
 
 namespace Slutuppgift_BibliotekDb.Migrations
 {
-    public partial class loanhistory : Migration
+    public partial class final : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -86,25 +86,25 @@ namespace Slutuppgift_BibliotekDb.Migrations
                 name: "LoanHistories",
                 columns: table => new
                 {
-                    BookId = table.Column<int>(type: "int", nullable: false)
+                    LoanId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    BookId1 = table.Column<int>(type: "int", nullable: false),
+                    BookId = table.Column<int>(type: "int", nullable: false),
                     LoanDate = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ReturnDate = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_LoanHistories", x => x.BookId);
+                    table.PrimaryKey("PK_LoanHistories", x => x.LoanId);
                     table.ForeignKey(
-                        name: "FK_LoanHistories_Books_BookId1",
-                        column: x => x.BookId1,
+                        name: "FK_LoanHistories_Books_BookId",
+                        column: x => x.BookId,
                         principalTable: "Books",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "BookLoans",
+                name: "ActiveBookLoans",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -117,15 +117,15 @@ namespace Slutuppgift_BibliotekDb.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BookLoans", x => x.Id);
+                    table.PrimaryKey("PK_ActiveBookLoans", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_BookLoans_Books_BookId",
+                        name: "FK_ActiveBookLoans_Books_BookId",
                         column: x => x.BookId,
                         principalTable: "Books",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_BookLoans_Customers_LibraryCardNr",
+                        name: "FK_ActiveBookLoans_Customers_LibraryCardNr",
                         column: x => x.LibraryCardNr,
                         principalTable: "Customers",
                         principalColumn: "LibraryCardNr",
@@ -133,42 +133,42 @@ namespace Slutuppgift_BibliotekDb.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_ActiveBookLoans_BookId",
+                table: "ActiveBookLoans",
+                column: "BookId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ActiveBookLoans_LibraryCardNr",
+                table: "ActiveBookLoans",
+                column: "LibraryCardNr");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_BookAuthors_BookId",
                 table: "BookAuthors",
                 column: "BookId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BookLoans_BookId",
-                table: "BookLoans",
-                column: "BookId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_BookLoans_LibraryCardNr",
-                table: "BookLoans",
-                column: "LibraryCardNr");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_LoanHistories_BookId1",
+                name: "IX_LoanHistories_BookId",
                 table: "LoanHistories",
-                column: "BookId1");
+                column: "BookId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "BookAuthors");
+                name: "ActiveBookLoans");
 
             migrationBuilder.DropTable(
-                name: "BookLoans");
+                name: "BookAuthors");
 
             migrationBuilder.DropTable(
                 name: "LoanHistories");
 
             migrationBuilder.DropTable(
-                name: "Authors");
+                name: "Customers");
 
             migrationBuilder.DropTable(
-                name: "Customers");
+                name: "Authors");
 
             migrationBuilder.DropTable(
                 name: "Books");

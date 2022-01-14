@@ -26,14 +26,14 @@ namespace Slutuppgift_BibliotekDb.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ActiveBookLoan>>> GetActiveBookLoans()
         {
-            return await _context.BookLoans.ToListAsync();
+            return await _context.ActiveBookLoans.ToListAsync();
         }
 
         // GET: api/ActiveBookLoans/5
         [HttpGet("{id}")]
         public async Task<ActionResult<ActiveBookLoan>> GetActiveBookLoan(int id)
         {
-            var activeBookLoan = await _context.BookLoans.FindAsync(id);
+            var activeBookLoan = await _context.ActiveBookLoans.FindAsync(id);
 
             if (activeBookLoan == null)
             {
@@ -108,7 +108,7 @@ namespace Slutuppgift_BibliotekDb.Controllers
             }
             activeBookLoan.LoanDate = DateTime.Now.ToString(@"MM\-dd\-yyyy HH\:mm");
             activeBookLoan.ReturnDate = "";
-            _context.BookLoans.Add(activeBookLoan);
+            _context.ActiveBookLoans.Add(activeBookLoan);
             try
             {
                 await _context.SaveChangesAsync();
@@ -132,13 +132,13 @@ namespace Slutuppgift_BibliotekDb.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteActiveBookLoan(int id)
         {
-            var activeBookLoan = await _context.BookLoans.FindAsync(id);
+            var activeBookLoan = await _context.ActiveBookLoans.FindAsync(id);
             if (activeBookLoan == null)
             {
                 return NotFound($"BookLoan with id: {id} dont exist");
             }
 
-            _context.BookLoans.Remove(activeBookLoan);
+            _context.ActiveBookLoans.Remove(activeBookLoan);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -146,7 +146,7 @@ namespace Slutuppgift_BibliotekDb.Controllers
 
         private bool ActiveBookLoanExists(int id)
         {
-            return _context.BookLoans.Any(e => e.Id == id);
+            return _context.ActiveBookLoans.Any(e => e.Id == id);
         }
     }
 }

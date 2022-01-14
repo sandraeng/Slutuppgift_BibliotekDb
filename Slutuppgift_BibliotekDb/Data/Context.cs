@@ -23,7 +23,7 @@ namespace Slutuppgift_BibliotekDb.Data
         public DbSet<Book> Books { get; set; }
         public DbSet<Author> Authors { get; set; }
         public DbSet<Customer> Customers { get; set; }
-        public DbSet<ActiveBookLoan> BookLoans { get; set; }
+        public DbSet<ActiveBookLoan> ActiveBookLoans { get; set; }
         public DbSet<BookAuthor> BookAuthors { get; set; }
         public DbSet<LoanHistory> LoanHistories { get; set; }
 

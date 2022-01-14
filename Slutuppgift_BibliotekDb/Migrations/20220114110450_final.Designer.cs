@@ -9,8 +9,8 @@ using Slutuppgift_BibliotekDb.Data;
 namespace Slutuppgift_BibliotekDb.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20220113132444_testing")]
-    partial class testing
+    [Migration("20220114110450_final")]
+    partial class final
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -22,6 +22,37 @@ namespace Slutuppgift_BibliotekDb.Migrations
 
             modelBuilder.HasSequence<int>("Sequense", "shared")
                 .StartsAt(1001L);
+
+            modelBuilder.Entity("Slutuppgift_BibliotekDb.Models.ActiveBookLoan", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("BookId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("IsLoanActive")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("LibraryCardNr")
+                        .HasColumnType("int");
+
+                    b.Property<string>("LoanDate")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ReturnDate")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookId");
+
+                    b.HasIndex("LibraryCardNr");
+
+                    b.ToTable("AktiveBookLoans");
+                });
 
             modelBuilder.Entity("Slutuppgift_BibliotekDb.Models.Author", b =>
                 {
@@ -90,37 +121,6 @@ namespace Slutuppgift_BibliotekDb.Migrations
                     b.ToTable("BookAuthors");
                 });
 
-            modelBuilder.Entity("Slutuppgift_BibliotekDb.Models.BookLoan", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("BookId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("IsLoanActive")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("LibraryCardNr")
-                        .HasColumnType("int");
-
-                    b.Property<string>("LoanDate")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ReturnDate")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BookId");
-
-                    b.HasIndex("LibraryCardNr");
-
-                    b.ToTable("BookLoans");
-                });
-
             modelBuilder.Entity("Slutuppgift_BibliotekDb.Models.Customer", b =>
                 {
                     b.Property<int>("LibraryCardNr")
@@ -145,7 +145,7 @@ namespace Slutuppgift_BibliotekDb.Migrations
 
             modelBuilder.Entity("Slutuppgift_BibliotekDb.Models.LoanHistory", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("LoanId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -159,11 +159,30 @@ namespace Slutuppgift_BibliotekDb.Migrations
                     b.Property<string>("ReturnDate")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("LoanId");
 
                     b.HasIndex("BookId");
 
                     b.ToTable("LoanHistories");
+                });
+
+            modelBuilder.Entity("Slutuppgift_BibliotekDb.Models.ActiveBookLoan", b =>
+                {
+                    b.HasOne("Slutuppgift_BibliotekDb.Models.Book", "Book")
+                        .WithMany("BookLoans")
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Slutuppgift_BibliotekDb.Models.Customer", "Customer")
+                        .WithMany("BookLoans")
+                        .HasForeignKey("LibraryCardNr")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Book");
+
+                    b.Navigation("Customer");
                 });
 
             modelBuilder.Entity("Slutuppgift_BibliotekDb.Models.BookAuthor", b =>
@@ -183,25 +202,6 @@ namespace Slutuppgift_BibliotekDb.Migrations
                     b.Navigation("Author");
 
                     b.Navigation("Book");
-                });
-
-            modelBuilder.Entity("Slutuppgift_BibliotekDb.Models.BookLoan", b =>
-                {
-                    b.HasOne("Slutuppgift_BibliotekDb.Models.Book", "Book")
-                        .WithMany("BookLoans")
-                        .HasForeignKey("BookId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Slutuppgift_BibliotekDb.Models.Customer", "Customer")
-                        .WithMany("BookLoans")
-                        .HasForeignKey("LibraryCardNr")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Book");
-
-                    b.Navigation("Customer");
                 });
 
             modelBuilder.Entity("Slutuppgift_BibliotekDb.Models.LoanHistory", b =>

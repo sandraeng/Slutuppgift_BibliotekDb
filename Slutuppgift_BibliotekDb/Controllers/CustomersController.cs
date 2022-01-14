@@ -96,7 +96,7 @@ namespace Slutuppgift_BibliotekDb.Controllers
             }
             if(customer.BookLoans.Any(c => c.ReturnDate == ""))
             {
-                ActiveBookLoan bookLoan = _context.BookLoans.FirstOrDefault(c => c.LibraryCardNr == id && c.ReturnDate == "");
+                ActiveBookLoan bookLoan = _context.ActiveBookLoans.FirstOrDefault(c => c.LibraryCardNr == id && c.ReturnDate == "");
                 loanHistory.BookId = bookLoan.BookId;
                 loanHistory.LoanDate = bookLoan.LoanDate;
                 loanHistory.ReturnDate = "Book not returned!";

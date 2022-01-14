@@ -109,14 +109,14 @@ namespace Slutuppgift_BibliotekDb.Data
             bookLoan.LibraryCardNr = 1001;
             bookLoan.LoanDate = DateTime.Now.ToString(@"MM\-dd\-yyyy HH\:mm");
             bookLoan.ReturnDate = "";
-            context.BookLoans.Add(bookLoan);
+            context.ActiveBookLoans.Add(bookLoan);
 
             ActiveBookLoan bookLoan1 = new ActiveBookLoan();
             bookLoan1.BookId = 1;
             bookLoan1.LibraryCardNr = 1003;
             bookLoan1.LoanDate = DateTime.Now.ToString(@"MM\-dd\-yyyy HH\:mm");
             bookLoan1.ReturnDate = "";
-            context.BookLoans.Add(bookLoan1);
+            context.ActiveBookLoans.Add(bookLoan1);
             context.SaveChanges();
         }
     }
