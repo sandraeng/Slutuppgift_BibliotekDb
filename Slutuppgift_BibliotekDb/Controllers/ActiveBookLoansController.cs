@@ -12,62 +12,63 @@ namespace Slutuppgift_BibliotekDb.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BookLoansController : ControllerBase
+    public class ActiveBookLoansController : ControllerBase
     {
         private readonly Context _context;
 
-        public BookLoansController(Context context)
+        public ActiveBookLoansController(Context context)
         {
             _context = context;
           
         }
 
-        // GET: api/BookLoans
+        // GET: api/ActiveBookLoans
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<BookLoan>>> GetBookLoans()
+        public async Task<ActionResult<IEnumerable<ActiveBookLoan>>> GetActiveBookLoans()
         {
             return await _context.BookLoans.ToListAsync();
         }
 
-        // GET: api/BookLoans/5
+        // GET: api/ActiveBookLoans/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<BookLoan>> GetBookLoan(int id)
+        public async Task<ActionResult<ActiveBookLoan>> GetActiveBookLoan(int id)
         {
-            var bookLoan = await _context.BookLoans.FindAsync(id);
+            var activeBookLoan = await _context.BookLoans.FindAsync(id);
 
-            if (bookLoan == null)
+            if (activeBookLoan == null)
             {
                 return NotFound();
             }
 
-            return bookLoan;
+            return activeBookLoan;
         }
 
         // PUT: api/BookLoans/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutBookLoan(int id, BookLoan bookLoan)
+        public async Task<IActionResult> PutActiveBookLoan(int id, ActiveBookLoan activeBookLoan)
         {
             LoanHistory loanHistory = new LoanHistory();
             try
             {
                 
-                var testString = bookLoan.IsLoanActive.ToUpper();
-                if (id != bookLoan.Id)
+                var testString = activeBookLoan.IsLoanActive.ToUpper();
+                if (id != activeBookLoan.Id)
                 {
-                    return BadRequest($"The id input is incorrect, bookloan id: {bookLoan.Id}, request id: {id}");
+                    return BadRequest($"The id input is incorrect, activebookloan id: {activeBookLoan.Id}, request id: {id}");
                 }
                 if (testString == "NO")
                 {
-                    Book book = await _context.Books.FirstOrDefaultAsync(x => x.Id == bookLoan.BookId);
-                    bookLoan.Book = book;
-                    bookLoan.Book.Loaned = "no";
-                    bookLoan.ReturnDate = DateTime.Now.ToString(@"MM\-dd\-yyyy HH\:mm");
-                    _context.Update(bookLoan);
+                    Book book = await _context.Books.FirstOrDefaultAsync(x => x.Id == activeBookLoan.BookId);
+                    activeBookLoan.Book = book;
+                    activeBookLoan.Book.Loaned = "no";
+                    activeBookLoan.ReturnDate = DateTime.Now.ToString(@"MM\-dd\-yyyy HH\:mm");
+                    _context.Update(activeBookLoan);
                     loanHistory.Book = book;
-                    loanHistory.LoanDate = bookLoan.LoanDate;
-                    loanHistory.ReturnDate = bookLoan.ReturnDate;
+                    loanHistory.LoanDate = activeBookLoan.LoanDate;
+                    loanHistory.ReturnDate = activeBookLoan.ReturnDate;
                     _context.LoanHistories.Add(loanHistory);
+                    _context.Remove(activeBookLoan);
                 }
                 if(testString != "YES" && testString != "NO")
                 {
@@ -77,7 +78,7 @@ namespace Slutuppgift_BibliotekDb.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!BookLoanExists(id))
+                if (!ActiveBookLoanExists(id))
                 {
                     return NotFound();
                 }
@@ -90,31 +91,31 @@ namespace Slutuppgift_BibliotekDb.Controllers
             return NoContent();
         }
 
-        // POST: api/BookLoans
+        // POST: api/ActiveBookLoans
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<BookLoan>> PostBookLoan(BookLoan bookLoan)
+        public async Task<ActionResult<ActiveBookLoan>> PostActiveBookLoan(ActiveBookLoan activeBookLoan)
         {
-            Book book = await _context.Books.FirstOrDefaultAsync(x => x.Id == bookLoan.BookId);
-            bookLoan.Book = book;
-            if(bookLoan.Book.Loaned.ToUpper() == "yes".ToUpper())
+            Book book = await _context.Books.FirstOrDefaultAsync(x => x.Id == activeBookLoan.BookId);
+            activeBookLoan.Book = book;
+            if(activeBookLoan.Book.Loaned.ToUpper() == "yes".ToUpper())
             {
                 return BadRequest("Book is already loaned out!");
             }
             else
             {
-                bookLoan.Book.Loaned = "yes";
+                activeBookLoan.Book.Loaned = "yes";
             }
-            bookLoan.LoanDate = DateTime.Now.ToString(@"MM\-dd\-yyyy HH\:mm");
-            bookLoan.ReturnDate = "";
-            _context.BookLoans.Add(bookLoan);
+            activeBookLoan.LoanDate = DateTime.Now.ToString(@"MM\-dd\-yyyy HH\:mm");
+            activeBookLoan.ReturnDate = "";
+            _context.BookLoans.Add(activeBookLoan);
             try
             {
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateException)
             {
-                if (BookLoanExists(bookLoan.Id))
+                if (ActiveBookLoanExists(activeBookLoan.Id))
                 {
                     return Conflict();
                 }
@@ -124,26 +125,26 @@ namespace Slutuppgift_BibliotekDb.Controllers
                 }
             }
 
-            return CreatedAtAction("GetBookLoan", new { id = bookLoan.Id }, bookLoan);
+            return CreatedAtAction("GetActiveBookLoan", new { id = activeBookLoan.Id }, activeBookLoan);
         }
 
         // DELETE: api/BookLoans/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteBookLoan(int id)
+        public async Task<IActionResult> DeleteActiveBookLoan(int id)
         {
-            var bookLoan = await _context.BookLoans.FindAsync(id);
-            if (bookLoan == null)
+            var activeBookLoan = await _context.BookLoans.FindAsync(id);
+            if (activeBookLoan == null)
             {
                 return NotFound($"BookLoan with id: {id} dont exist");
             }
 
-            _context.BookLoans.Remove(bookLoan);
+            _context.BookLoans.Remove(activeBookLoan);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool BookLoanExists(int id)
+        private bool ActiveBookLoanExists(int id)
         {
             return _context.BookLoans.Any(e => e.Id == id);
         }

@@ -14,7 +14,7 @@ namespace Slutuppgift_BibliotekDb
     {
         public static void Main(string[] args)
         {
-           
+
             CreateHostBuilder(args).Build().Run();
         }
 

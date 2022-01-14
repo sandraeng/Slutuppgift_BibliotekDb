@@ -104,14 +104,14 @@ namespace Slutuppgift_BibliotekDb.Data
             bookAuthor4.AuthorId = 3;
             context.BookAuthors.Add(bookAuthor4);
 
-            BookLoan bookLoan = new BookLoan();
+            ActiveBookLoan bookLoan = new ActiveBookLoan();
             bookLoan.BookId = 4;
             bookLoan.LibraryCardNr = 1001;
             bookLoan.LoanDate = DateTime.Now.ToString(@"MM\-dd\-yyyy HH\:mm");
             bookLoan.ReturnDate = "";
             context.BookLoans.Add(bookLoan);
 
-            BookLoan bookLoan1 = new BookLoan();
+            ActiveBookLoan bookLoan1 = new ActiveBookLoan();
             bookLoan1.BookId = 1;
             bookLoan1.LibraryCardNr = 1003;
             bookLoan1.LoanDate = DateTime.Now.ToString(@"MM\-dd\-yyyy HH\:mm");

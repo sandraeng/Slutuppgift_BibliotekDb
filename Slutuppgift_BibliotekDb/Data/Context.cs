@@ -17,13 +17,13 @@ namespace Slutuppgift_BibliotekDb.Data
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb; Database = LibraryDb; Trusted_Connection = true");
+                optionsBuilder.UseSqlServer("Data Source=tcp:sandraengserver.database.windows.net,1433;Initial Catalog=Librarydb;User Id=Sandra;Password=qwerty123-");
             }
         }
         public DbSet<Book> Books { get; set; }
         public DbSet<Author> Authors { get; set; }
         public DbSet<Customer> Customers { get; set; }
-        public DbSet<BookLoan> BookLoans { get; set; }
+        public DbSet<ActiveBookLoan> BookLoans { get; set; }
         public DbSet<BookAuthor> BookAuthors { get; set; }
         public DbSet<LoanHistory> LoanHistories { get; set; }
 
@@ -36,9 +36,9 @@ namespace Slutuppgift_BibliotekDb.Data
             modelBuilder.HasSequence<int>("Sequense", schema: "shared").StartsAt(1001).IncrementsBy(1);
             modelBuilder.Entity<Customer>().Property(c => c.LibraryCardNr).HasDefaultValueSql("NEXT VALUE FOR shared.Sequense");
 
-            modelBuilder.Entity<BookLoan>().HasOne(rh => rh.Customer).WithMany(c => c.BookLoans).HasForeignKey(rh => rh.LibraryCardNr);
+            modelBuilder.Entity<ActiveBookLoan>().HasOne(rh => rh.Customer).WithMany(c => c.BookLoans).HasForeignKey(rh => rh.LibraryCardNr);
 
-            modelBuilder.Entity<BookLoan>().HasOne(bl => bl.Book).WithMany(b => b.BookLoans).HasForeignKey(bl => bl.BookId);
+            modelBuilder.Entity<ActiveBookLoan>().HasOne(bl => bl.Book).WithMany(b => b.BookLoans).HasForeignKey(bl => bl.BookId);
 
             modelBuilder.Entity<BookAuthor>().HasKey(ba => new { ba.AuthorId, ba.BookId});
 

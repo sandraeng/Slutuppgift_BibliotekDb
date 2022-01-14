@@ -37,7 +37,7 @@ namespace Slutuppgift_BibliotekDb
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public async void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -61,11 +61,10 @@ namespace Slutuppgift_BibliotekDb
             using (var scope = serviceScopeFactory.CreateScope())
             {
                 var context = scope.ServiceProvider.GetService<Context>();
-                context.Database.EnsureDeleted();
-                context.Database.EnsureCreated();
+                await context.Database.EnsureDeletedAsync();
+                await context.Database.EnsureCreatedAsync();
                 DataAccess dataAccess = new DataAccess();
                 dataAccess.SeedDatabase();
-
             }
         }
     }

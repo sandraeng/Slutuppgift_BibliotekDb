@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -28,11 +29,11 @@ namespace Slutuppgift_BibliotekDb.Controllers
             return await _context.BookAuthors.ToListAsync();
         }
 
-        // GET: api/BookAuthors/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<BookAuthor>> GetBookAuthor(int id)
-        {
-            var bookAuthor = await _context.BookAuthors.FindAsync(id);
+        // GET: api/BookAuthors/bookId/authorId
+        [HttpGet("{bookId}/{authorId}")]
+        public async Task<ActionResult<BookAuthor>> GetBookAuthor(int bookId, int authorId)
+{
+            var bookAuthor = await _context.BookAuthors.FirstOrDefaultAsync(ba => ba.BookId == bookId && ba.AuthorId == authorId);
 
             if (bookAuthor == null)
             {
@@ -42,12 +43,12 @@ namespace Slutuppgift_BibliotekDb.Controllers
             return bookAuthor;
         }
 
-        // PUT: api/BookAuthors/5
+        // PUT: api/BookAuthors/bookId/authorId
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutBookAuthor(int id, BookAuthor bookAuthor)
+        [HttpPut("{bookId}/{authorId}")]
+        public async Task<IActionResult> PutBookAuthor(int bookId, int authorId, BookAuthor bookAuthor)
         {
-            if (id != bookAuthor.AuthorId)
+            if (authorId != bookAuthor.AuthorId && bookId != bookAuthor.BookId)
             {
                 return BadRequest();
             }
@@ -60,7 +61,7 @@ namespace Slutuppgift_BibliotekDb.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!BookAuthorExists(id))
+                if (!BookAuthorExists(authorId, bookId))
                 {
                     return NotFound();
                 }
@@ -85,7 +86,7 @@ namespace Slutuppgift_BibliotekDb.Controllers
             }
             catch (DbUpdateException)
             {
-                if (BookAuthorExists(bookAuthor.AuthorId))
+                if (BookAuthorExists(bookAuthor.AuthorId, bookAuthor.BookId))
                 {
                     return Conflict();
                 }
@@ -98,11 +99,11 @@ namespace Slutuppgift_BibliotekDb.Controllers
             return CreatedAtAction("GetBookAuthor", new { id = bookAuthor.AuthorId }, bookAuthor);
         }
 
-        // DELETE: api/BookAuthors/5
+        // DELETE: api/BookAuthors/bookId/authorId
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteBookAuthor(int id)
-        {
-            var bookAuthor = await _context.BookAuthors.FindAsync(id);
+        public async Task<IActionResult> DeleteBookAuthor(int bookId, int authorId)
+        { 
+            var bookAuthor = await _context.BookAuthors.FirstOrDefaultAsync(ba => ba.BookId == bookId && ba.AuthorId == authorId);
             if (bookAuthor == null)
             {
                 return NotFound();
@@ -114,9 +115,9 @@ namespace Slutuppgift_BibliotekDb.Controllers
             return NoContent();
         }
 
-        private bool BookAuthorExists(int id)
+        private bool BookAuthorExists(int bookId, int authorId)
         {
-            return _context.BookAuthors.Any(e => e.AuthorId == id);
+            return _context.BookAuthors.Any(e => e.AuthorId == authorId && e.BookId == bookId);
         }
     }
 }

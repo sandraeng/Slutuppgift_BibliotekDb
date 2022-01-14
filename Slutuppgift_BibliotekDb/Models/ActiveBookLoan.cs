@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Slutuppgift_BibliotekDb.Models
 {
-    public class BookLoan
+    public class ActiveBookLoan
     {
         public int Id { get; set; }
         public int BookId { get; set; }
@@ -14,7 +14,7 @@ namespace Slutuppgift_BibliotekDb.Models
         public string LoanDate { get; set; } 
         public string ReturnDate { get; set; }
 
-        public BookLoan()
+        public ActiveBookLoan()
         {
             IsLoanActive = "Yes";
            

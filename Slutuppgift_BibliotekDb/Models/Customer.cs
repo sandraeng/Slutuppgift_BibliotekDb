@@ -12,6 +12,6 @@ namespace Slutuppgift_BibliotekDb.Models
         [StringLength(50)]
         [Required]
         public string LastName { get; set; }
-        public ICollection<BookLoan> BookLoans { get; set; }
+        public ICollection<ActiveBookLoan> BookLoans { get; set; }
     }
 }

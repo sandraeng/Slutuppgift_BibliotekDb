@@ -17,7 +17,7 @@ namespace Slutuppgift_BibliotekDb.Models
         public double Rating { get; set; }
         public string Loaned { get; set; }
 
-        public ICollection<BookLoan> BookLoans { get; set; }
+        public ICollection<ActiveBookLoan> BookLoans { get; set; }
         public ICollection<BookAuthor> BookAuthors { get; set; }
         public ICollection<LoanHistory> LoanHistories { get; set; }
 
